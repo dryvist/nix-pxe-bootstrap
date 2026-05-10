@@ -9,6 +9,7 @@ on:
     paths:
       - "docs/architecture/**.mmd"
       - "docs/architecture/**.svg"
+      - ".github/scripts/puppeteer-config.json"
       - ".github/workflows/mermaid-render-check.yml"
 
 permissions:
@@ -28,7 +29,7 @@ jobs:
         uses: DeterminateSystems/determinate-nix-action@v3
 
       - name: Re-render every .mmd source
-        run: find docs/architecture -name '*.mmd' -print0 | xargs -0 -I{} nix run nixpkgs#mermaid-cli -- -i {} -o {}.svg --quiet
+        run: find docs/architecture -name '*.mmd' -print0 | xargs -0 -I{} nix run nixpkgs#mermaid-cli -- -i {} -o {}.svg --puppeteerConfigFile .github/scripts/puppeteer-config.json --quiet
 
       - name: Normalise rendered output paths
         run: find docs/architecture -name '*.mmd.svg' -print0 | xargs -0 -I{} bash -c 'mv "$1" "${1%.mmd.svg}.svg"' _ {}
