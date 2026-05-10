@@ -1,0 +1,22 @@
+---
+title: PXE host network topology
+---
+flowchart LR
+  UDW["UDW gateway/controller"]
+  US16["US-16-150W (1 GbE mgmt)"]
+  FLEX["Switch Flex 2.5G PoE (cluster fabric)"]
+  PXE["pxe-host (Pi/MiniPC)<br/>NixOS · netboot.xyz · nginx-static"]
+  B["proxmox-b"]
+  C["proxmox-c (R410)"]
+  D["proxmox-d (R710)"]
+
+  UDW -- "DHCP/DNS, mgmt VLAN" --> US16
+  US16 -- "1 GbE mgmt" --> PXE
+  US16 -- "1 GbE iDRAC/IPMI" --> C
+  US16 -- "1 GbE iDRAC/IPMI" --> D
+  PXE -- "TFTP/HTTP boot menu + answer files" --> B
+  PXE -- "TFTP/HTTP boot menu + answer files" --> C
+  PXE -- "TFTP/HTTP boot menu + answer files" --> D
+  FLEX -- "2.5 GbE cluster fabric (post-install)" --> B
+  FLEX -- "2.5 GbE cluster fabric (post-install)" --> C
+  FLEX -- "2.5 GbE cluster fabric (post-install)" --> D

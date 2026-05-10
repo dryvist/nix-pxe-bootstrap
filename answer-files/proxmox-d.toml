@@ -1,0 +1,25 @@
+# Proxmox VE auto-installer answer file — node D (PLACEHOLDER).
+# Same caveats as proxmox-b.toml. D is a Dell R710.
+
+[global]
+keyboard = "en-us"
+country = "us"
+fqdn = "proxmox-d.example.local"
+mailto = "ops@example.com"
+timezone = "America/Indiana/Indianapolis"
+root_password_hashed = "$6$placeholderplaceholder$placeholderplaceholderplaceholderplaceholderplaceholderplaceholderplaceholderplaceholderplaceholder"
+root_ssh_keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPlaceholderOperatorKeyForProxmoxDPlaceholder operator@example"]
+
+[network]
+source = "from-answer"
+
+[network.from-answer]
+filter.MAC = "AA:BB:CC:DD:EE:03"   # placeholder — real MAC from R710 NIC
+cidr = "192.168.0.23/24"
+gateway = "192.168.0.1"
+dns = "192.168.0.1"
+
+[disk-setup]
+filesystem = "zfs"
+zfs.raid = "raid1"
+disk_list = ["sda", "sdb"]         # placeholder — replace with by-id paths

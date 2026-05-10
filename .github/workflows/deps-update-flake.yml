@@ -1,0 +1,47 @@
+# Weekly flake input refresh.
+# Renovate handles most updates; this workflow exists for the occasional
+# `nix flake update` of all inputs at once.
+name: Update flake dependencies
+
+on:
+  schedule:
+    - cron: "0 12 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    name: nix flake update
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: DeterminateSystems/determinate-nix-action@v3
+
+      - name: Update flake inputs
+        run: nix flake update
+
+      - name: Validate flake
+        run: nix flake check --no-build --show-trace
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        with:
+          branch: chore/flake-update
+          delete-branch: true
+          commit-message: "chore(deps): update flake inputs"
+          title: "chore(deps): update flake inputs"
+          body: |
+            Automated weekly `nix flake update`.
+
+            Triggered by ${{ env.EVENT_NAME }}.
+          labels: dependencies

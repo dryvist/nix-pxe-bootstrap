@@ -1,0 +1,37 @@
+# Mermaid render-diff gate.
+# Re-renders every docs/architecture/*.mmd to .svg and fails the PR if the
+# committed .svg does not match the freshly-rendered output. Per dryvist
+# convention (PR #620 — Mermaid sources committed alongside rendered SVGs).
+name: Mermaid render check
+
+on:
+  pull_request:
+    paths:
+      - "docs/architecture/**.mmd"
+      - "docs/architecture/**.svg"
+      - ".github/workflows/mermaid-render-check.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    name: Re-render mermaid sources
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: DeterminateSystems/determinate-nix-action@v3
+
+      - name: Re-render every .mmd source
+        run: find docs/architecture -name '*.mmd' -print0 | xargs -0 -I{} nix run nixpkgs#mermaid-cli -- -i {} -o {}.svg --quiet
+
+      - name: Normalise rendered output paths
+        run: find docs/architecture -name '*.mmd.svg' -print0 | xargs -0 -I{} bash -c 'mv "$1" "${1%.mmd.svg}.svg"' _ {}
+
+      - name: Fail on diff
+        run: git diff --exit-code -- 'docs/architecture/*.svg'

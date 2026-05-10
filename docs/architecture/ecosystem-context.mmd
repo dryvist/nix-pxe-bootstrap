@@ -1,0 +1,20 @@
+---
+title: nix-pxe-bootstrap in the dryvist ecosystem
+---
+flowchart TB
+  subgraph dryvist["dryvist org repos"]
+    PXE["nix-pxe-bootstrap<br/>(this repo)"]
+    APC["ansible-proxmox-cluster<br/>host config B+C+D"]
+    TPC["tofu-proxmox-cluster<br/>VMs/LXCs IaC"]
+    APP["ansible-server-apps<br/>app deploys"]
+    AI["nix-ai-server<br/>standalone NixOS host A"]
+    SCH["homelab-schemas<br/>inventory contract"]
+  end
+
+  PXE -- "PXE boot + auto-install" --> APC
+  APC -- "consumes inventory schema" --> SCH
+  APP -- "consumes inventory schema" --> SCH
+  TPC -- "emits ansible_inventory.json" --> APC
+  TPC -- "emits ansible_inventory.json" --> APP
+
+  AI -. "standalone, never joins cluster" .- APC

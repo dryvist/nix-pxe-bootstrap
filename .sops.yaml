@@ -1,0 +1,24 @@
+# SOPS rules for nix-pxe-bootstrap.
+#
+# Maintainer + Bitwarden recipients are PLACEHOLDERS. Real public keys land
+# when the host age key is materialized via ssh-to-age (after first boot via
+# nixos-anywhere).
+#
+# To generate the host age key from a host SSH key:
+#   ssh-keyscan <pxe-host-ip> | ssh-to-age
+keys:
+  # Maintainer (operator) age key. Real value lives in ~/.config/sops/age/keys.txt;
+  # public form below is a placeholder until it is exported and committed.
+  - &operator age1placeholderoperatorkeyaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  # Bitwarden-backed escrow recipient (offsite recovery copy).
+  - &bitwarden_escrow age1placeholderbitwardenkeyaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  # Host age key (derived from the pxe-host SSH host key after first boot).
+  - &host_pxe age1placeholderhostkeyaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+creation_rules:
+  - path_regex: ^secrets/.*\.(enc\.)?yaml$
+    key_groups:
+      - age:
+          - *operator
+          - *bitwarden_escrow
+          - *host_pxe

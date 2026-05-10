@@ -1,0 +1,22 @@
+---
+title: PXE boot + Proxmox auto-installer flow
+---
+sequenceDiagram
+  autonumber
+  participant Node as Cluster node (B/C/D)
+  participant DHCP as UDW DHCP
+  participant PXE as pxe-host (NixOS)
+  participant Repo as nginx-static (ISOs + answer files)
+
+  Node->>DHCP: DHCPDISCOVER (PXE)
+  DHCP-->>Node: DHCPOFFER + next-server=pxe-host
+  Node->>PXE: TFTP request iPXE binary
+  PXE-->>Node: iPXE chainload payload
+  Node->>PXE: HTTP GET netboot.xyz menu
+  PXE-->>Node: netboot.xyz menu
+  Node->>Repo: HTTP GET proxmox-ve.iso
+  Repo-->>Node: ISO stream
+  Node->>Repo: HTTP GET proxmox-{b,c,d}.toml (per MAC)
+  Repo-->>Node: Answer file
+  Node->>Node: Unattended Proxmox install
+  Node->>Node: Reboot into installed OS

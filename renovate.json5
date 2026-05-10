@@ -1,0 +1,16 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    "github>JacobPEvans/.github//renovate-presets.json",
+  ],
+  // Daily nix flake input updates handled by deps-update-flake.yml workflow.
+  // Renovate covers GitHub Actions pins and other ecosystem deps here.
+  packageRules: [
+    {
+      // Group GitHub Actions weekly so we don't get flooded.
+      matchManagers: ["github-actions"],
+      groupName: "github-actions",
+      schedule: ["before 9am on monday"],
+    },
+  ],
+}
