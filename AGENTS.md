@@ -21,8 +21,8 @@
   feels like it needs a script, restate it as a NixOS module option.
 - **Answer-file format:** Proxmox auto-installer TOML. ADR-0003 documents
   why TOML over JSON or YAML.
-- **CI:** mirrors the nix-darwin pattern — `alejandra`, `statix`, `deadnix`,
-  `nix flake check`, plus mermaid render-diff gate.
+- **CI:** mirrors the nix-darwin pattern — `nixfmt-rfc-style`, `statix`,
+  `deadnix`, `nix flake check`, plus mermaid render-diff gate.
 
 ## Related repos
 

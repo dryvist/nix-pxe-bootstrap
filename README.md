@@ -96,7 +96,7 @@ modules/
 answer-files/
   proxmox-{b,c,d}.toml                    # Proxmox auto-installer placeholders
 secrets/system.enc.yaml                   # SOPS-encrypted (empty) placeholder
-lib/checks.nix                            # Quality checks (alejandra/statix/deadnix)
+lib/checks.nix                            # Quality checks (nixfmt-rfc-style/statix/deadnix)
 docs/architecture/*.mmd + *.svg           # Mermaid sources + rendered SVGs
 docs/adr/*.md                             # Architecture Decision Records
 ```

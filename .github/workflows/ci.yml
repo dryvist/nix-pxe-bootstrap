@@ -1,5 +1,5 @@
 # CI — runs on every PR and on pushes to main.
-# Validates the flake (alejandra/statix/deadnix/flake-check).
+# Validates the flake (nixfmt-rfc-style/statix/deadnix/flake-check).
 name: CI
 
 on:

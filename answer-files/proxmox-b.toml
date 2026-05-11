@@ -14,7 +14,8 @@ country = "us"
 fqdn = "proxmox-b.example.local"
 mailto = "ops@example.com"
 timezone = "America/Indiana/Indianapolis"
-# Placeholder bcrypt hash — replace via SOPS-templated render.
+# Placeholder sha512-crypt ($6$) hash — Proxmox accepts crypt(3) formats.
+# Replace via SOPS-templated render at install time.
 root_password_hashed = "$6$placeholderplaceholder$placeholderplaceholderplaceholderplaceholderplaceholderplaceholderplaceholderplaceholderplaceholder"
 # Placeholder operator pubkey.
 root_ssh_keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPlaceholderOperatorKeyForProxmoxBPlaceholder operator@example"]
