@@ -1,0 +1,41 @@
+# CI Gate — thin consumer of the dryvist hub reusable workflow.
+#
+# All check logic lives in dryvist/.github `_ci-gate.yml` (change detection,
+# conditional checks, queue watchdog, and the aggregating "Merge Gate" job).
+# Branch protection should require ONLY the "Merge Gate" check.
+#
+# nix_validate is OFF: this repo has no flake.nix yet. Flip it to true when
+# the flake lands (the `nix` filter below is already in place).
+
+name: CI Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  gate:
+    permissions:
+      contents: read
+      pull-requests: read
+      actions: write # hub Queue Watchdog cancels stuck queued sibling jobs
+    uses: dryvist/.github/.github/workflows/_ci-gate.yml@main
+    with:
+      nix_validate: false
+      markdown_lint: true
+      file_size: true
+      filters: |
+        nix:
+          - '**.nix'
+          - 'flake.lock'
+        markdown:
+          - '**.md'
+          - '.markdownlint*'
