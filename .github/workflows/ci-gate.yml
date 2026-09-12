@@ -29,9 +29,6 @@ jobs:
       actions: write # hub Queue Watchdog cancels stuck queued sibling jobs
     uses: dryvist/.github/.github/workflows/_ci-gate.yml@main
     with:
-      nix_validate: false
-      markdown_lint: true
-      file_size: true
       filters: |
         nix:
           - '**.nix'
